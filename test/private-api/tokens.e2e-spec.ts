@@ -5,7 +5,6 @@
  */
 import request from 'supertest';
 
-import { User } from '../../src/users/user.entity';
 import { TestSetup, TestSetupBuilder } from '../test-setup';
 
 describe('Tokens', () => {
@@ -82,9 +81,9 @@ describe('Tokens', () => {
       .get('/api/private/tokens/')
       .expect('Content-Type', /json/)
       .expect(200);
-    const tokenList: any[] = response.body;
+    const tokenList: { keyId: string }[] = response.body;
     expect(
-      tokenList.find((token: any) => {
+      tokenList.find((token) => {
         return token.keyId === keyId;
       }),
     ).toBeUndefined();

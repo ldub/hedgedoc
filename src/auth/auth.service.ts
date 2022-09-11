@@ -7,7 +7,7 @@ import { Injectable } from '@nestjs/common';
 import { Cron, Timeout } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import crypto, { randomBytes } from 'crypto';
-import { Equal, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import {
   NotInDBError,
