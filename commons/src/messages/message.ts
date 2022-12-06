@@ -3,9 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { encodeGenericMessage } from './generic-message.js'
 import { MessageType } from './message-type.enum.js'
 
-export function encodeReadyRequestMessage(): Uint8Array {
-  return encodeGenericMessage(MessageType.READY_REQUEST)
+export interface Message<T extends MessageType> {
+  type: T
+}
+
+export interface NumericPayloadMessage<T extends MessageType>
+  extends Message<T> {
+  type: T
+  payload: number[]
 }

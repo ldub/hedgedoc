@@ -5,20 +5,25 @@
  */
 import {
   applyAwarenessUpdateMessage,
+  AwarenessUpdateMessage,
   encodeAwarenessUpdateMessage
 } from './messages/awareness-update-message.js'
 import { encodeCompleteDocumentStateAnswerMessage } from './messages/complete-document-state-answer-message.js'
-import { encodeCompleteDocumentStateRequestMessage } from './messages/complete-document-state-request-message.js'
-import { applyDocumentUpdateMessage } from './messages/document-update-message.js'
+import {
+  CompleteDocumentStateRequestMessage,
+  encodeCompleteDocumentStateRequestMessage
+} from './messages/complete-document-state-request-message.js'
+import {
+  applyDocumentUpdateMessage,
+  DocumentUpdateMessage
+} from './messages/document-update-message.js'
 import { MessageType } from './messages/message-type.enum.js'
-import { encodeReadyAnswerMessage } from './messages/ready-answer-message.js'
-import { encodeReadyRequestMessage } from './messages/ready-request-message.js'
+import { Message } from './messages/message.js'
 import { EventEmitter2 } from 'eventemitter2'
-import { Decoder, readVarUint } from 'lib0/decoding'
 import { Awareness } from 'y-protocols/awareness'
 import { Doc } from 'yjs'
 
-export type Handler = (decoder: Decoder) => void
+export type Handler = (message: unknown) => void
 
 export type MessageTransporterEvents = {
   disconnected: () => void
@@ -36,7 +41,7 @@ export abstract class YDocMessageTransporter extends EventEmitter2 {
   ) {
     super()
     this.on(String(MessageType.READY_REQUEST), () => {
-      this.send(encodeReadyAnswerMessage())
+      this.send({ type: MessageType.READY_ANSWER })
     })
     this.on(String(MessageType.READY_ANSWER), () => {
       this.emit('ready')
@@ -50,7 +55,7 @@ export abstract class YDocMessageTransporter extends EventEmitter2 {
 
   protected onOpen(): void {
     this.emit('connected')
-    this.send(encodeReadyRequestMessage())
+    this.send({ type: MessageType.READY_REQUEST })
   }
 
   protected onClose(): void {
@@ -64,20 +69,31 @@ export abstract class YDocMessageTransporter extends EventEmitter2 {
     }
   }
 
-  protected decodeMessage(buffer: ArrayBuffer): void {
-    const data = new Uint8Array(buffer)
-    const decoder = new Decoder(data)
-    const messageType = readVarUint(decoder) as MessageType
+  protected decodeMessage(message: string): void {
+    const data = JSON.parse(message) as Message<MessageType>
 
-    switch (messageType) {
+    switch (data.type) {
       case MessageType.COMPLETE_DOCUMENT_STATE_REQUEST:
-        this.send(encodeCompleteDocumentStateAnswerMessage(this.doc, decoder))
+        this.send(
+          encodeCompleteDocumentStateAnswerMessage(
+            this.doc,
+            data as CompleteDocumentStateRequestMessage
+          )
+        )
         break
       case MessageType.DOCUMENT_UPDATE:
-        applyDocumentUpdateMessage(decoder, this.doc, this)
+        applyDocumentUpdateMessage(
+          data as DocumentUpdateMessage,
+          this.doc,
+          this
+        )
         break
       case MessageType.COMPLETE_DOCUMENT_STATE_ANSWER:
-        applyDocumentUpdateMessage(decoder, this.doc, this)
+        applyDocumentUpdateMessage(
+          data as DocumentUpdateMessage,
+          this.doc,
+          this
+        )
         this.markAsSynced()
         break
       case MessageType.COMPLETE_AWARENESS_STATE_REQUEST:
@@ -89,10 +105,14 @@ export abstract class YDocMessageTransporter extends EventEmitter2 {
         )
         break
       case MessageType.AWARENESS_UPDATE:
-        applyAwarenessUpdateMessage(decoder, this.awareness, this)
+        applyAwarenessUpdateMessage(
+          data as AwarenessUpdateMessage,
+          this.awareness,
+          this
+        )
     }
 
-    this.emit(String(messageType), decoder)
+    this.emit(data.type, data)
   }
 
   private bindDocumentSyncMessageEvents(doc: Doc) {
@@ -107,7 +127,7 @@ export abstract class YDocMessageTransporter extends EventEmitter2 {
    *
    * @param content The binary data to send.
    */
-  public abstract send(content: Uint8Array): void
+  public abstract send(content: Message<MessageType>): void
 
   public abstract disconnect(): void
 }

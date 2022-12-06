@@ -3,10 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import {
-  encodeDocumentDeletedMessage,
-  encodeMetadataUpdatedMessage,
-} from '@hedgedoc/commons';
+import { MessageType } from '@hedgedoc/commons';
 import { Mock } from 'ts-mockery';
 
 import { Note } from '../../notes/note.entity';
@@ -98,7 +95,7 @@ describe('realtime note', () => {
     sut.addClient(client1);
     const client2 = mockConnection(true);
     sut.addClient(client2);
-    const metadataMessage = encodeMetadataUpdatedMessage();
+    const metadataMessage = { type: MessageType.METADATA_UPDATED };
     sut.announcePermissionChange();
     expect(client1.send).toHaveBeenCalledWith(metadataMessage);
     expect(client2.send).toHaveBeenCalledWith(metadataMessage);
@@ -114,7 +111,7 @@ describe('realtime note', () => {
     sut.addClient(client1);
     const client2 = mockConnection(true);
     sut.addClient(client2);
-    const deletedMessage = encodeDocumentDeletedMessage();
+    const deletedMessage = { type: MessageType.DOCUMENT_DELETED };
     sut.announceNoteDeletion();
     expect(client1.send).toHaveBeenCalledWith(deletedMessage);
     expect(client2.send).toHaveBeenCalledWith(deletedMessage);

@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { ConnectionKeepAliveHandler } from './connection-keep-alive-handler.js'
+import { MessageType } from './messages/message-type.enum.js'
+import { Message } from './messages/message.js'
 import { YDocMessageTransporter } from './y-doc-message-transporter.js'
 import WebSocket from 'isomorphic-ws'
 import { Awareness } from 'y-protocols/awareness'
@@ -25,9 +27,8 @@ export class WebsocketTransporter extends YDocMessageTransporter {
       throw new Error(`Socket is closed`)
     }
     this.websocket = websocket
-    websocket.binaryType = 'arraybuffer'
     websocket.addEventListener('message', (event) =>
-      this.decodeMessage(event.data as ArrayBuffer)
+      this.decodeMessage(event.data as string)
     )
     websocket.addEventListener('error', () => this.disconnect())
     websocket.addEventListener('close', () => this.onClose())
@@ -42,13 +43,13 @@ export class WebsocketTransporter extends YDocMessageTransporter {
     this.websocket?.close()
   }
 
-  public send(content: Uint8Array): void {
+  public send(content: Message<MessageType>): void {
     if (this.websocket?.readyState !== WebSocket.OPEN) {
       throw new Error("Can't send message over non-open socket")
     }
 
     try {
-      this.websocket.send(content)
+      this.websocket.send(JSON.stringify(content))
     } catch (error: unknown) {
       this.disconnect()
       throw error

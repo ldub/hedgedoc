@@ -35,9 +35,9 @@ export const useOnNoteDeleted = (websocketConnection: YDocMessageTransporter): v
   }, [router, noteTitle, dispatchUiNotification])
 
   useEffect(() => {
-    websocketConnection.on(String(MessageType.DOCUMENT_DELETED), noteDeletedHandler)
+    websocketConnection.on(MessageType.DOCUMENT_DELETED, noteDeletedHandler)
     return () => {
-      websocketConnection.off(String(MessageType.DOCUMENT_DELETED), noteDeletedHandler)
+      websocketConnection.off(MessageType.DOCUMENT_DELETED, noteDeletedHandler)
     }
   })
 }

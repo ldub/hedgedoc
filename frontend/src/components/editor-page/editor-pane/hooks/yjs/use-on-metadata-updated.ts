@@ -19,9 +19,9 @@ export const useOnMetadataUpdated = (websocketConnection: YDocMessageTransporter
   }, [])
 
   useEffect(() => {
-    websocketConnection.on(String(MessageType.METADATA_UPDATED), () => void updateMetadataHandler())
+    websocketConnection.on(MessageType.METADATA_UPDATED, () => void updateMetadataHandler())
     return () => {
-      websocketConnection.off(String(MessageType.METADATA_UPDATED), () => void updateMetadataHandler())
+      websocketConnection.off(MessageType.METADATA_UPDATED, () => void updateMetadataHandler())
     }
   })
 }

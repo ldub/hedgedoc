@@ -5,7 +5,6 @@
  */
 import { MessageType } from './messages/message-type.enum.js'
 import type { YDocMessageTransporter } from './y-doc-message-transporter.js'
-import { createEncoder, toUint8Array, writeVarUint } from 'lib0/encoding'
 
 /**
  * Provides a keep alive ping for a given {@link WebSocket websocket} connection by sending a periodic message.
@@ -64,14 +63,10 @@ export class ConnectionKeepAliveHandler {
   }
 
   private sendPingMessage(): void {
-    const encoder = createEncoder()
-    writeVarUint(encoder, MessageType.PING)
-    this.messageTransporter.send(toUint8Array(encoder))
+    this.messageTransporter.send({ type: MessageType.PING })
   }
 
   private sendPongMessage(): void {
-    const encoder = createEncoder()
-    writeVarUint(encoder, MessageType.PONG)
-    this.messageTransporter.send(toUint8Array(encoder))
+    this.messageTransporter.send({ type: MessageType.PING })
   }
 }

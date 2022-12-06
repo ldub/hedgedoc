@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { encodeDocumentUpdateMessage } from './messages/document-update-message.js'
+import { Message } from './messages/message'
 import { MessageType } from './messages/message-type.enum.js'
 import { YDocMessageTransporter } from './y-doc-message-transporter.js'
 import { describe, expect, it } from '@jest/globals'
@@ -35,12 +36,12 @@ class InMemoryMessageTransporter extends YDocMessageTransporter {
     this.otherSide?.setOtherSide(undefined)
   }
 
-  send(content: Uint8Array): void {
+  send(content: Message<MessageType>): void {
     if (this.otherSide === undefined) {
       throw new Error('Disconnected')
     }
     console.debug(`${this.name}`, 'Sending', content)
-    this.otherSide?.decodeMessage(content)
+    this.otherSide?.decodeMessage(JSON.stringify(content))
   }
 
   public onOpen(): void {

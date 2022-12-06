@@ -3,7 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { WebsocketTransporter } from '@hedgedoc/commons';
+import { MessageType, WebsocketTransporter } from '@hedgedoc/commons';
+import { Message } from '@hedgedoc/commons/dist/messages/message';
 import { Logger } from '@nestjs/common';
 import WebSocket from 'ws';
 import { Awareness, removeAwarenessStates } from 'y-protocols/awareness';
@@ -79,7 +80,7 @@ export class WebsocketConnection {
    *
    * @param content The content to send
    */
-  public send(content: Uint8Array): void {
+  public send(content: Message<MessageType>): void {
     this.transporter.send(content);
   }
 

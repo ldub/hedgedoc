@@ -5,8 +5,8 @@
  */
 import {
   encodeAwarenessUpdateMessage,
-  encodeCompleteAwarenessStateRequestMessage,
   encodeDocumentUpdateMessage,
+  MessageType,
   WebsocketTransporter
 } from '@hedgedoc/commons'
 import WebSocket from 'isomorphic-ws'
@@ -43,7 +43,7 @@ export class WebsocketConnection extends WebsocketTransporter {
       awareness.on('update', updateCallback)
     })
     this.on('synced', () => {
-      this.send(encodeCompleteAwarenessStateRequestMessage())
+      this.send({ type: MessageType.COMPLETE_AWARENESS_STATE_REQUEST })
       this.send(encodeAwarenessUpdateMessage(awareness, [awareness.doc.clientID]))
     })
   }

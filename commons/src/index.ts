@@ -15,12 +15,8 @@ export {
   applyDocumentUpdateMessage,
   encodeDocumentUpdateMessage
 } from './messages/document-update-message.js'
-export { encodeCompleteAwarenessStateRequestMessage } from './messages/complete-awareness-state-request-message.js'
 export { encodeCompleteDocumentStateRequestMessage } from './messages/complete-document-state-request-message.js'
 export { encodeCompleteDocumentStateAnswerMessage } from './messages/complete-document-state-answer-message.js'
-export { encodeDocumentDeletedMessage } from './messages/document-deleted-message.js'
-export { encodeMetadataUpdatedMessage } from './messages/metadata-updated-message.js'
-export { encodeServerVersionUpdatedMessage } from './messages/server-version-updated-message.js'
 
 export { WebsocketTransporter } from './websocket-transporter.js'
 

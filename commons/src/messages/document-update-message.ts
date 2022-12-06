@@ -4,30 +4,26 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { MessageType } from './message-type.enum.js'
-import { readVarUint8Array } from 'lib0/decoding'
-import type { Decoder } from 'lib0/decoding.js'
-import {
-  createEncoder,
-  toUint8Array,
-  writeVarUint,
-  writeVarUint8Array
-} from 'lib0/encoding'
+import { NumericPayloadMessage } from './message.js'
 import type { Doc } from 'yjs'
 import { applyUpdate } from 'yjs'
 
+export type DocumentUpdateMessage =
+  NumericPayloadMessage<MessageType.DOCUMENT_UPDATE>
+
 export function applyDocumentUpdateMessage(
-  decoder: Decoder,
+  message: DocumentUpdateMessage,
   doc: Doc,
   origin: unknown
 ): void {
-  applyUpdate(doc, readVarUint8Array(decoder), origin)
+  applyUpdate(doc, new Uint8Array(message.payload), origin)
 }
 
 export function encodeDocumentUpdateMessage(
   documentUpdate: Uint8Array
-): Uint8Array {
-  const encoder = createEncoder()
-  writeVarUint(encoder, MessageType.DOCUMENT_UPDATE)
-  writeVarUint8Array(encoder, documentUpdate)
-  return toUint8Array(encoder)
+): DocumentUpdateMessage {
+  return {
+    type: MessageType.DOCUMENT_UPDATE,
+    payload: Array.from(documentUpdate)
+  }
 }
