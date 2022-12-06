@@ -1,0 +1,73 @@
+/*
+ * SPDX-FileCopyrightText: 2022 The HedgeDoc developers (see AUTHORS file)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+import type { SelectionRange } from '@codemirror/state'
+import { EditorSelection } from '@codemirror/state'
+import * as Y from 'yjs'
+import type { RelativePosition } from 'yjs'
+
+export interface RelativePositionJson {
+  type?: RelativePosition['type']
+  tname?: RelativePosition['tname']
+  item?: RelativePosition['item']
+  assoc?: RelativePosition['assoc']
+}
+
+export interface YRangeJson {
+  yAnchor: RelativePositionJson
+  yHead: RelativePositionJson
+}
+
+/**
+ * Defines a range on text using relative positions that can be transformed back to
+ * absolute positions. (https://docs.yjs.dev/api/relative-positions)
+ */
+export class YRange {
+  constructor(public readonly yAnchor: RelativePosition, public readonly yHead: RelativePosition) {}
+
+  /**
+   * @returns {any}
+   */
+  toJSON(): YRangeJson {
+    return {
+      yAnchor: Y.relativePositionToJSON(this.yAnchor) as RelativePositionJson,
+      yHead: Y.relativePositionToJSON(this.yHead) as RelativePositionJson
+    }
+  }
+
+  static fromJSON(json: YRangeJson) {
+    return new YRange(Y.createRelativePositionFromJSON(json.yAnchor), Y.createRelativePositionFromJSON(json.yHead))
+  }
+
+  toYPos(pos: number, assoc = 0): RelativePosition {
+    return createRelativePositionFromTypeIndex(this.yText, pos, assoc)
+  }
+
+  fromYPos(rpos: RelativePositionJson): SelectionRange {
+    if (this.yText.doc == null) {
+      throw new Error("ytext isn't linked to a document")
+    }
+    const pos = createAbsolutePositionFromRelativePosition(createRelativePositionFromJSON(rpos), this.yText.doc)
+    if (pos == null || pos.type !== this.yText) {
+      throw new Error('[y-codemirror] The position you want to retrieve was created by a different document')
+    }
+    return EditorSelection.cursor(pos.index, pos.assoc)
+  }
+
+  toYRange(range: SelectionRange): YRange {
+    const assoc = range.assoc
+    const yanchor = this.toYPos(range.anchor, assoc)
+    const yhead = this.toYPos(range.head, assoc)
+    return new YRange(yanchor, yhead)
+  }
+
+  fromYRange(yrange: YRange): SelectionRange {
+    const anchor = this.fromYPos(yrange.yAnchor)
+    const head = this.fromYPos(yrange.yHead)
+    return anchor.pos === head.pos
+      ? EditorSelection.cursor(head.pos, head.assoc)
+      : EditorSelection.range(anchor.pos, head.pos)
+  }
+}

@@ -3,38 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import type { RealtimeUser } from '@hedgedoc/commons'
 import type { Action } from 'redux'
 
-export enum RealtimeActionType {
-  ADD_ONLINE_USER = 'realtime/add-user',
-  REMOVE_ONLINE_USER = 'realtime/remove-user',
-  UPDATE_ONLINE_USER = 'realtime/update-user'
+export enum RealtimeUserActionType {
+  SET_REALTIME_USERS = 'realtime/set-users'
 }
 
-export interface RealtimeState {
-  users: Record<number, OnlineUser>
+export interface SetRealtimeUsersAction extends Action<RealtimeUserActionType> {
+  type: RealtimeUserActionType.SET_REALTIME_USERS
+  users: RealtimeUser[]
 }
 
-export enum ActiveIndicatorStatus {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive'
-}
-
-export interface OnlineUser {
-  username: string
-  color: string
-  active: ActiveIndicatorStatus
-}
-
-export interface AddOnlineUserAction extends Action<RealtimeActionType> {
-  type: RealtimeActionType.ADD_ONLINE_USER
-  clientId: number
-  user: OnlineUser
-}
-
-export interface RemoveOnlineUserAction extends Action<RealtimeActionType> {
-  type: RealtimeActionType.REMOVE_ONLINE_USER
-  clientId: number
-}
-
-export type RealtimeActions = AddOnlineUserAction | RemoveOnlineUserAction
+export type RealtimeActions = SetRealtimeUsersAction

@@ -16,10 +16,14 @@ import { ChangeEditorContentContextProvider } from './change-content-context/cha
 import { EditorDocumentRenderer } from './editor-document-renderer/editor-document-renderer'
 import { EditorPane } from './editor-pane/editor-pane'
 import { useComponentsFromAppExtensions } from './editor-pane/hooks/use-components-from-app-extensions'
+import { useOnMetadataUpdated } from './editor-pane/hooks/yjs/use-on-metadata-updated'
+import { useOnNoteDeleted } from './editor-pane/hooks/yjs/use-on-note-deleted'
+import { useRealtimeConnection } from './editor-pane/hooks/yjs/use-realtime-connection'
 import { useUpdateLocalHistoryEntry } from './hooks/use-update-local-history-entry'
 import { Sidebar } from './sidebar/sidebar'
 import { Splitter } from './splitter/splitter'
 import type { DualScrollState, ScrollState } from './synced-scroll/scroll-props'
+import { RealtimeConnectionModal } from './websocket-connection-modal/realtime-connection-modal'
 import equal from 'fast-deep-equal'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -96,15 +100,20 @@ export const EditorPageContent: React.FC = () => {
     }
   }, [])
 
+  const messageTransporter = useRealtimeConnection()
+  useOnMetadataUpdated(messageTransporter)
+  useOnNoteDeleted(messageTransporter)
+
   const leftPane = useMemo(
     () => (
       <EditorPane
         scrollState={scrollState.editorScrollState}
         onScroll={onEditorScroll}
         onMakeScrollSource={setEditorToScrollSource}
+        messageTransporter={messageTransporter}
       />
     ),
-    [onEditorScroll, scrollState.editorScrollState, setEditorToScrollSource]
+    [messageTransporter, onEditorScroll, scrollState.editorScrollState, setEditorToScrollSource]
   )
 
   const rightPane = useMemo(
@@ -129,6 +138,7 @@ export const EditorPageContent: React.FC = () => {
         <CommunicatorImageLightbox />
         <NoteAndAppTitleHead />
         <MotdModal />
+        <RealtimeConnectionModal messageTransporter={messageTransporter} />
         <div className={'d-flex flex-column vh-100'}>
           <AppBar mode={AppBarMode.EDITOR} />
           <div className={'flex-fill d-flex h-100 w-100 overflow-hidden flex-row'}>

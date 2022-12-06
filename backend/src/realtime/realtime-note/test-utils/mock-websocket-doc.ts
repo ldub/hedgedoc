@@ -12,7 +12,7 @@ import { WebsocketDoc } from '../websocket-doc';
  */
 export function mockWebsocketDoc(): WebsocketDoc {
   return Mock.of<WebsocketDoc>({
-    on: jest.fn(),
+    getYDoc: jest.fn(),
     destroy: jest.fn(),
     getCurrentContent: jest.fn(),
   });

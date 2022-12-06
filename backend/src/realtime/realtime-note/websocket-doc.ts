@@ -3,17 +3,21 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { encodeDocumentUpdateMessage } from '@hedgedoc/commons';
+import {
+  MARKDOWN_CONTENT_CHANNEL_NAME,
+  Message,
+  MessageType,
+} from '@hedgedoc/commons';
 import { Doc } from 'yjs';
 
+import { RealtimeConnection } from './realtime-connection';
 import { RealtimeNote } from './realtime-note';
-import { WebsocketConnection } from './websocket-connection';
 
 /**
  * This is the implementation of {@link Doc YDoc} which includes additional handlers for message sending and receiving.
  */
-export class WebsocketDoc extends Doc {
-  private static readonly channelName = 'markdownContent';
+export class WebsocketDoc {
+  private yDoc: Doc = new Doc();
 
   /**
    * Creates a new WebsocketDoc instance.
@@ -25,7 +29,6 @@ export class WebsocketDoc extends Doc {
    * @param initialContent - the initial content of the {@link Doc YDoc}
    */
   constructor(private realtimeNote: RealtimeNote, initialContent: string) {
-    super();
     this.initializeContent(initialContent);
     this.bindUpdateEvent();
   }
@@ -34,15 +37,17 @@ export class WebsocketDoc extends Doc {
    * Binds the event that distributes updates in the current {@link Doc y-doc} to all clients.
    */
   private bindUpdateEvent(): void {
-    this.on('update', (update: Uint8Array, origin: WebsocketConnection) => {
-      const clients = this.realtimeNote
+    this.yDoc.on('update', (update: Uint8Array, origin: RealtimeConnection) => {
+      const payload: Message<MessageType.DOCUMENT_UPDATE> = {
+        type: MessageType.DOCUMENT_UPDATE,
+        payload: Array.from(update),
+      };
+      this.realtimeNote
         .getConnections()
-        .filter((client) => client !== origin && client.isSynced());
-      if (clients.length > 0) {
-        clients.forEach((client) => {
-          client.send(encodeDocumentUpdateMessage(update));
+        .filter((connection) => connection !== origin && connection.isSynced())
+        .forEach((connection) => {
+          connection.getTransporter().sendMessage(payload);
         });
-      }
     });
   }
 
@@ -55,7 +60,7 @@ export class WebsocketDoc extends Doc {
    * @private
    */
   private initializeContent(initialContent: string): void {
-    this.getText(WebsocketDoc.channelName).insert(0, initialContent);
+    this.yDoc.getText(MARKDOWN_CONTENT_CHANNEL_NAME).insert(0, initialContent);
   }
 
   /**
@@ -66,6 +71,14 @@ export class WebsocketDoc extends Doc {
    * @return The current note content.
    */
   public getCurrentContent(): string {
-    return this.getText(WebsocketDoc.channelName).toString();
+    return this.yDoc.getText(MARKDOWN_CONTENT_CHANNEL_NAME).toString();
+  }
+
+  public destroy(): void {
+    this.yDoc.destroy();
+  }
+
+  public getYDoc(): Doc {
+    return this.yDoc;
   }
 }

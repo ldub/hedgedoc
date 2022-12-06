@@ -2231,7 +2231,6 @@ __metadata:
     jest: 29.3.1
     joi: 17.7.0
     ldapauth-fork: 5.0.5
-    lib0: 0.2.58
     minio: 7.0.32
     mocked-env: 1.3.5
     mysql: 2.18.1
@@ -2257,7 +2256,6 @@ __metadata:
     typeorm: 0.3.7
     typescript: 4.9.4
     ws: 8.12.0
-    y-protocols: 1.0.5
     yjs: 13.5.44
   languageName: unknown
   linkType: soft
@@ -2274,16 +2272,15 @@ __metadata:
     eslint-config-prettier: 8.6.0
     eslint-plugin-jest: 27.2.1
     eslint-plugin-prettier: 4.2.1
-    eventemitter2: ^6.4.9
-    isomorphic-ws: ^5.0.0
+    eventemitter2: 6.4.9
+    isomorphic-ws: 5.0.0
     jest: 29.3.1
-    lib0: ^0.2.51
     microbundle: 0.15.1
     prettier: 2.8.2
     ts-jest: 29.0.3
+    typed-event-emitter-2: "https://github.com/mrdrogdrog/typed-event-emitter-2.git"
     typescript: 4.9.3
-    ws: ^8.0.0
-    y-protocols: ^1.0.0
+    ws: 8.12.0
     yjs: 13.5.44
   languageName: unknown
   linkType: soft
@@ -2422,8 +2419,6 @@ __metadata:
     vega-lite: 5.6.0
     words-count: 2.0.2
     ws: 8.12.0
-    y-codemirror.next: 0.3.2
-    y-protocols: 1.0.5
     yjs: 13.5.44
   languageName: unknown
   linkType: soft
@@ -9274,7 +9269,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eventemitter2@npm:6.4.9, eventemitter2@npm:^6.4.9":
+"eventemitter2@npm:6.4.9":
   version: 6.4.9
   resolution: "eventemitter2@npm:6.4.9"
   checksum: be59577c1e1c35509c7ba0e2624335c35bbcfd9485b8a977384c6cc6759341ea1a98d3cb9dbaa5cea4fff9b687e504504e3f9c2cc1674cf3bd8a43a7c74ea3eb
@@ -11283,7 +11278,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"isomorphic-ws@npm:5.0.0, isomorphic-ws@npm:^5.0.0":
+"isomorphic-ws@npm:5.0.0":
   version: 5.0.0
   resolution: "isomorphic-ws@npm:5.0.0"
   peerDependencies:
@@ -17396,6 +17391,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typed-event-emitter-2@https://github.com/mrdrogdrog/typed-event-emitter-2.git":
+  version: 0.0.1
+  resolution: "typed-event-emitter-2@https://github.com/mrdrogdrog/typed-event-emitter-2.git#commit=2371ab553c064b628003d3a7ea201e681066d18b"
+  peerDependencies:
+    eventemitter2: "*"
+  checksum: 380b16244e13acf645b2b79ba1d3f054655320f7ba9247ada1c7f5d51daa0f102f393aedd52e48712d79b76ed41065e82d0edc4d8ed70cbf6b57bc8487e11f54
+  languageName: node
+  linkType: hard
+
 "typedarray@npm:^0.0.6":
   version: 0.0.6
   resolution: "typedarray@npm:0.0.6"
@@ -18600,7 +18604,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:8.12.0, ws@npm:^8.0.0, ws@npm:^8.11.0":
+"ws@npm:8.12.0, ws@npm:^8.11.0":
   version: 8.12.0
   resolution: "ws@npm:8.12.0"
   peerDependencies:
@@ -18672,37 +18676,6 @@ __metadata:
   version: 4.0.2
   resolution: "xtend@npm:4.0.2"
   checksum: ac5dfa738b21f6e7f0dd6e65e1b3155036d68104e67e5d5d1bde74892e327d7e5636a076f625599dc394330a731861e87343ff184b0047fef1360a7ec0a5a36a
-  languageName: node
-  linkType: hard
-
-"y-codemirror.next@npm:0.3.2":
-  version: 0.3.2
-  resolution: "y-codemirror.next@npm:0.3.2"
-  dependencies:
-    lib0: ^0.2.42
-  peerDependencies:
-    "@codemirror/state": ^6.0.0
-    "@codemirror/view": ^6.0.0
-    yjs: ^13.5.6
-  checksum: d86cae29fe654ad4e556782c08055eb3e4ee1706cdb1bd7bf5b15c2ce1c91cb5b9d7785c8b0a9ee85444337fd3a0dba84d9d276895114a62dba9dab6d9d05ca0
-  languageName: node
-  linkType: hard
-
-"y-protocols@npm:1.0.5":
-  version: 1.0.5
-  resolution: "y-protocols@npm:1.0.5"
-  dependencies:
-    lib0: ^0.2.42
-  checksum: d19404a4ebafcf3761c28b881abe8c32ab6e457db0e5ffc7dbb749cbc2c3bb98e003a43f3e8eba7f245b2698c76f2c4cdd1c2db869f8ec0c6ef94736d9a88652
-  languageName: node
-  linkType: hard
-
-"y-protocols@patch:y-protocols@npm%3A1.0.5#./.yarn/patches/y-protocols-npm-1.0.5-af6f64b4df.patch::locator=hedgedoc%40workspace%3A.":
-  version: 1.0.5
-  resolution: "y-protocols@patch:y-protocols@npm%3A1.0.5#./.yarn/patches/y-protocols-npm-1.0.5-af6f64b4df.patch::version=1.0.5&hash=74a689&locator=hedgedoc%40workspace%3A."
-  dependencies:
-    lib0: ^0.2.42
-  checksum: 95480e7d8dac9e14cf82473f3a151aee131e0624d4e4920b63c96a91e7fcf3597612852368f62741c7ba3ff8a6aea1d77b7ddca3f4c9426da7dd8f4c6c98b728
   languageName: node
   linkType: hard
 

@@ -167,7 +167,7 @@ export class NotesService {
    */
   async getNoteContent(note: Note): Promise<string> {
     return (
-      this.realtimeNoteStore.find(note.id)?.getYDoc().getCurrentContent() ??
+      this.realtimeNoteStore.find(note.id)?.getWebsocketDoc().getCurrentContent() ??
       (await this.revisionsService.getLatestRevision(note)).content
     );
   }

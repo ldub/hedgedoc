@@ -14,7 +14,6 @@ import { RevisionsService } from '../../revisions/revisions.service';
 import { RealtimeNote } from './realtime-note';
 import { RealtimeNoteStore } from './realtime-note-store';
 import { RealtimeNoteService } from './realtime-note.service';
-import { mockAwareness } from './test-utils/mock-awareness';
 import { mockRealtimeNote } from './test-utils/mock-realtime-note';
 import { mockWebsocketDoc } from './test-utils/mock-websocket-doc';
 import { waitForOtherPromisesToFinish } from './test-utils/wait-for-other-promises-to-finish';
@@ -56,11 +55,7 @@ describe('RealtimeNoteService', () => {
 
     websocketDoc = mockWebsocketDoc();
     mockedNote = Mock.of<Note>({ id: mockedNoteId });
-    mockedRealtimeNote = mockRealtimeNote(
-      mockedNote,
-      websocketDoc,
-      mockAwareness(),
-    );
+    mockedRealtimeNote = mockRealtimeNote(mockedNote, websocketDoc);
 
     revisionsService = Mock.of<RevisionsService>({
       getLatestRevision: jest.fn(),
