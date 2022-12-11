@@ -20,8 +20,8 @@
     "cy:open": "cypress open",
     "cy:run:chrome": "cypress run --browser chrome",
     "cy:run:firefox": "cypress run --browser firefox",
-    "test": "cross-env NODE_ENV=test jest --watch",
-    "test:ci": "cross-env NODE_ENV=test jest --ci"
+    "test:watch": "cross-env NODE_ENV=test jest --watch",
+    "test": "cross-env NODE_ENV=test jest --ci"
   },
   "browserslist": {
     "production": [
