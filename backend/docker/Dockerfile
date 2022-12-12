@@ -25,6 +25,8 @@ FROM base as code-with-deps
 USER node
 WORKDIR /usr/src/app
 
+RUN apk add --no-cache libc6-compat
+
 COPY --chown=node .yarn/plugins .yarn/plugins
 COPY --chown=node .yarn/patches .yarn/patches
 COPY --chown=node .yarn/releases .yarn/releases
