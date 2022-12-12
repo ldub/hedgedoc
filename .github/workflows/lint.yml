@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: 2021 The HedgeDoc developers (see AUTHORS file)
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
+name: Lint and format
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+env:
+  NODE_VERSION: 18
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint files and check formatting
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: ./.github/actions/setup-node
+        with:
+          NODE_VERSION: ${{ env.NODE_VERSION }}
+
+      - name: Run ESLint
+        run: yarn lint
+
+      - name: Run prettier
+        run: yarn format

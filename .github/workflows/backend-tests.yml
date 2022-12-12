@@ -46,22 +46,6 @@ jobs:
               - '.github/**'
               - '.yarn/**'
 
-  lint:
-    needs: changes
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
-        if: needs.changes.outputs.changed == 'true'
-
-      - name: Setup node
-        if: needs.changes.outputs.changed == 'true'
-        uses: ./.github/actions/setup-node
-        with:
-          NODE_VERSION: ${{ env.NODEJS_VERSION }}
-
-      - run: yarn run lint
-        if: needs.changes.outputs.changed == 'true'
-
   build:
     needs: changes
     runs-on: ubuntu-latest
