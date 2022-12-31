@@ -45,10 +45,6 @@ COPY --chown=node commons/ commons/
 COPY --chown=node backend/nest-cli.json backend/tsconfig.json backend/tsconfig.build.json backend/
 COPY --chown=node backend/src backend/src
 
-WORKDIR /usr/src/app/commons
-
-RUN yarn build
-
 ## Stage 2a: Dev config files and tests
 FROM code-with-deps as development
 USER node
@@ -63,9 +59,9 @@ CMD ["node", "-r", "ts-node/register", "src/main.ts"]
 ## Stage 2b: Compile TypeScript
 FROM code-with-deps as builder
 USER node
-WORKDIR /usr/src/app/backend
+WORKDIR /usr/src/app
 
-RUN yarn run build
+RUN yarn build --scope backend
 
 ## Stage 3a: Install only prod dependencies
 FROM code-with-deps as prod-dependencies

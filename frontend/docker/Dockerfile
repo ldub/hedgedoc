@@ -24,16 +24,12 @@ COPY --chown=node frontend frontend
 RUN --mount=type=cache,sharing=locked,uid=1000,gid=1000,target=/tmp/.yarn \
     yarn install --immutable && yarn workspaces focus @hedgedoc/frontend
 
-WORKDIR /usr/src/app/commons
-
-RUN yarn build
-
-WORKDIR /usr/src/app/frontend
+WORKDIR /usr/src/app
 
 RUN rm -rf public/public && \
     rm -rf src/pages/api && \
     sed -i "s/CLIENT_VERSION_MISSING/${BUILD_VERSION}/" src/version.json
-RUN yarn build
+RUN yarn build --scope frontend
 
 # RUNNER
 FROM docker.io/node:18-alpine@sha256:fda98168118e5a8f4269efca4101ee51dd5c75c0fe56d8eb6fad80455c2f5827
