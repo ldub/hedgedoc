@@ -10,7 +10,6 @@
   "scripts": {
     "build": "turbo run build",
     "lint": "turbo run lint",
-    "format": "turbo run format",
     "test": "turbo run test"
   },
   "packageManager": "yarn@3.3.1",
