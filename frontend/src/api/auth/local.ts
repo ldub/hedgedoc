@@ -6,7 +6,6 @@
 import { PostApiRequestBuilder } from '../common/api-request-builder/post-api-request-builder'
 import { PutApiRequestBuilder } from '../common/api-request-builder/put-api-request-builder'
 import type { ChangePasswordDto, LoginDto, RegisterDto } from './types'
-import { AuthError, RegisterError } from './types'
 
 /**
  * Requests to do a local login with a provided username and password.
@@ -23,10 +22,6 @@ export const doLocalLogin = async (username: string, password: string): Promise<
       username,
       password
     })
-    .withStatusCodeErrorMapping({
-      400: AuthError.LOGIN_DISABLED,
-      401: AuthError.INVALID_CREDENTIALS
-    })
     .sendRequest()
 }
 
@@ -36,7 +31,6 @@ export const doLocalLogin = async (username: string, password: string): Promise<
  * @param username The username of the new user.
  * @param displayName The display name of the new user.
  * @param password The password of the new user.
- * @throws {RegisterError.PASSWORD_TOO_WEAK} when the backend deems the password too weak.
  * @throws {RegisterError.USERNAME_EXISTING} when there is already an existing user with the same username.
  * @throws {RegisterError.REGISTRATION_DISABLED} when the registration of local users has been disabled on the backend.
  * @throws {Error} when the api request wasn't successful.
@@ -47,11 +41,6 @@ export const doLocalRegister = async (username: string, displayName: string, pas
       username,
       displayName,
       password
-    })
-    .withStatusCodeErrorMapping({
-      400: RegisterError.PASSWORD_TOO_WEAK,
-      403: RegisterError.REGISTRATION_DISABLED,
-      409: RegisterError.USERNAME_EXISTING
     })
     .sendRequest()
 }
@@ -68,10 +57,6 @@ export const doLocalPasswordChange = async (currentPassword: string, newPassword
     .withJsonBody({
       currentPassword,
       newPassword
-    })
-    .withStatusCodeErrorMapping({
-      400: AuthError.LOGIN_DISABLED,
-      401: AuthError.INVALID_CREDENTIALS
     })
     .sendRequest()
 }

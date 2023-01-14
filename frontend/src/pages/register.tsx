@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { doLocalRegister } from '../api/auth/local'
-import { RegisterError as RegisterErrorType } from '../api/auth/types'
+import { ErrorToI18nKeyMapper } from '../api/common/error-to-i18n-key-mapper'
 import { DisplayNameField } from '../components/common/fields/display-name-field'
 import { NewPasswordField } from '../components/common/fields/new-password-field'
 import { PasswordAgainField } from '../components/common/fields/password-again-field'
@@ -13,7 +13,6 @@ import { Redirect } from '../components/common/redirect'
 import { LandingLayout } from '../components/landing-layout/landing-layout'
 import { fetchAndSetUser } from '../components/login-page/auth/utils'
 import { useUiNotifications } from '../components/notifications/ui-notification-boundary'
-import { RegisterError } from '../components/register-page/register-error/register-error'
 import { RegisterInfos } from '../components/register-page/register-infos/register-infos'
 import { useApplicationState } from '../hooks/common/use-application-state'
 import { useOnInputChange } from '../hooks/common/use-on-input-change'
@@ -21,7 +20,7 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import type { FormEvent } from 'react'
 import React, { useCallback, useMemo, useState } from 'react'
-import { Button, Card, Col, Form, Row } from 'react-bootstrap'
+import { Alert, Button, Card, Col, Form, Row } from 'react-bootstrap'
 import { Trans, useTranslation } from 'react-i18next'
 
 /**
@@ -37,7 +36,7 @@ export const RegisterPage: NextPage = () => {
   const [displayName, setDisplayName] = useState('')
   const [password, setPassword] = useState('')
   const [passwordAgain, setPasswordAgain] = useState('')
-  const [error, setError] = useState<RegisterErrorType>()
+  const [error, setError] = useState<string>()
 
   const { dispatchUiNotification } = useUiNotifications()
 
@@ -48,11 +47,11 @@ export const RegisterPage: NextPage = () => {
         .then(() => dispatchUiNotification('login.register.success.title', 'login.register.success.message', {}))
         .then(() => router.push('/'))
         .catch((error: Error) => {
-          setError(
-            Object.values(RegisterErrorType).includes(error.message as RegisterErrorType)
-              ? (error.message as RegisterErrorType)
-              : RegisterErrorType.OTHER
-          )
+          const foundI18nKey = new ErrorToI18nKeyMapper(error, 'login.register.error')
+            .withHttpCode(409, 'usernameExisting')
+            .withBackendErrorName('registrationDisabled', 'registrationDisabled')
+            .getFoundI18nKey('other')
+          setError(foundI18nKey)
         })
       event.preventDefault()
     },
@@ -105,7 +104,9 @@ export const RegisterPage: NextPage = () => {
                   </Button>
                 </Form>
 
-                <RegisterError error={error} />
+                <Alert className='small' show={!!error} variant='danger'>
+                  <Trans i18nKey={error} />
+                </Alert>
               </Card.Body>
             </Card>
           </Col>

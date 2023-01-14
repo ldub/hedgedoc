@@ -1,21 +1,8 @@
 /*
- * SPDX-FileCopyrightText: 2023 The HedgeDoc developers (see AUTHORS file)
+ * SPDX-FileCopyrightText: 2022 The HedgeDoc developers (see AUTHORS file)
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-export enum AuthError {
-  INVALID_CREDENTIALS = 'invalidCredentials',
-  LOGIN_DISABLED = 'loginDisabled',
-  OPENID_ERROR = 'openIdError',
-  OTHER = 'other'
-}
-
-export enum RegisterError {
-  USERNAME_EXISTING = 'usernameExisting',
-  PASSWORD_TOO_WEAK = 'passwordTooWeak',
-  REGISTRATION_DISABLED = 'registrationDisabled',
-  OTHER = 'other'
-}
 
 export interface LoginDto {
   username: string
