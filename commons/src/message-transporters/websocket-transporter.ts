@@ -16,7 +16,7 @@ export class WebsocketTransporter extends MessageTransporter {
       websocket.readyState === WebSocket.CLOSED ||
       websocket.readyState === WebSocket.CLOSING
     ) {
-      throw new Error(`Socket is closed`)
+      return
     }
     this.websocket = websocket
     websocket.addEventListener('message', (event) => {

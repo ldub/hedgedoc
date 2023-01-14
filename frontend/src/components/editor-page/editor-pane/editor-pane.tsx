@@ -103,22 +103,24 @@ export const EditorPane: React.FC<EditorPaneProps> = ({
   const lastCursorSent = useRef<SelectionRange>()
 
   const cursorSelectionExtension = useMemo((): Extension => {
-    return EditorView.updateListener.of((update) => {
-      const currentCursor = update.state.selection.main
-      if (messageTransporter === undefined || lastCursorSent.current === currentCursor) {
-        return
-      }
-      lastCursorSent.current = currentCursor
-      const from = currentCursor.from
-      const to = currentCursor.to
-      messageTransporter?.sendMessage({
-        type: MessageType.REALTIME_USER_CURSOR_UPDATE,
-        payload: {
-          from,
-          to
-        }
-      })
-    })
+    return messageTransporter === undefined
+      ? []
+      : EditorView.updateListener.of((update) => {
+          const currentCursor = update.state.selection.main
+          if (lastCursorSent.current === currentCursor) {
+            return
+          }
+          lastCursorSent.current = currentCursor
+          const from = currentCursor.from
+          const to = currentCursor.to
+          messageTransporter.sendMessage({
+            type: MessageType.REALTIME_USER_CURSOR_UPDATE,
+            payload: {
+              from,
+              to
+            }
+          })
+        })
   }, [messageTransporter])
 
   const extensions = useMemo(
