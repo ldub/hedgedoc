@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-only
 
-name: Lint and format
+name: Lint and check format
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
     branches: [ develop ]
 
 env:
-  NODE_VERSION: 18
+  NODEJS_VERSION: 18
 
 jobs:
   lint:
@@ -24,7 +24,9 @@ jobs:
       - name: Setup node
         uses: ./.github/actions/setup-node
         with:
-          NODE_VERSION: ${{ env.NODE_VERSION }}
+          NODEJS_VERSION: ${{ env.NODEJS_VERSION }}
 
       - name: Run ESLint
         run: yarn lint
+        env:
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}

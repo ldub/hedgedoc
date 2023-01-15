@@ -1,6 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "env": ["NODEJS_VERSION"],
+      "outputs": []
+    },
     "frontend#build": {
       "dependsOn": [
         "^build"
@@ -17,23 +24,69 @@
         "dist/**"
       ]
     },
-    "build": {
+
+    "build:test": {
       "dependsOn": [
         "^build"
       ],
       "outputs": []
     },
+    "frontend#build:test": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        ".next/**"
+      ]
+    },
+
+    "build:mock": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": []
+    },
+    "frontend#build:mock": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        ".next/**"
+      ]
+    },
+
     "lint": {
       "dependsOn": [
         "^build"
       ],
       "outputs": []
     },
-    "test": {
+
+    "test:ci": {
+      "dependsOn": [
+        "^build"
+      ],
+      "env": ["NODEJS_VERSION"],
+      "outputs": []
+    },
+
+    "test:e2e:ci": {
       "dependsOn": [
         "^build"
       ],
       "outputs": []
+    },
+    "backend#test:e2e:ci": {
+      "dependsOn": [
+        "^build"
+      ],
+      "env": ["HEDGEDOC_TEST_DB_TYPE"]
+    },
+    "frontend#test:e2e:ci": {
+      "dependsOn": [
+        "^build",
+        "build:test"
+      ]
     }
   }
 }

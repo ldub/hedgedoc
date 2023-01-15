@@ -18,10 +18,11 @@
     "start": "cross-env PORT=3001 next start",
     "start:ci": "cross-env NODE_ENV=test PORT=3001 next start",
     "cy:open": "cypress open",
-    "cy:run:chrome": "cypress run --browser chrome",
-    "cy:run:firefox": "cypress run --browser firefox",
+    "test:e2e": "cypress run --browser chrome",
+    "test:e2e:ci": "cypress run --browser chrome --record true --parallel --group \"chrome\"",
     "test:watch": "cross-env NODE_ENV=test jest --watch",
-    "test": "cross-env NODE_ENV=test jest --ci"
+    "test:ci": "cross-env NODE_ENV=test jest --ci",
+    "test": "cross-env NODE_ENV=test jest"
   },
   "browserslist": {
     "production": [

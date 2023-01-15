@@ -1,0 +1,51 @@
+# SPDX-FileCopyrightText: 2021 The HedgeDoc developers (see AUTHORS file)
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
+name: Turbo task
+description: "Runs a turbo task that only uploads its result to the remote cache if its running on the develop branch to prevent cache poisoning by PRs"
+
+inputs:
+  TASK_NAME:
+    required: true
+    description: "Task name"
+  TURBO_TOKEN:
+    required: true
+    description: "Value fro TURBO_TOKEN"
+  HEDGEDOC_TEST_DB_TYPE:
+    required: false
+    description: "Value for HEDGEDOC_TEST_DB_TYPE"
+  NODEJS_VERSION:
+    required: false
+    description: "Value for NODEJS_VERSION"
+  CYPRESS_RECORD_KEY:
+    required: false
+    description: "Value for CYPRESS_RECORD_KEY"
+  GITHUB_TOKEN:
+    required: false
+    description: "Value for GITHUB_TOKEN"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run turbo task (on develop)
+      if: github.event_name == 'push'
+      run: yarn run ${{ inputs.TASK_NAME }}
+      shell: bash
+      env:
+        HEDGEDOC_TEST_DB_TYPE: ${{ inputs.HEDGEDOC_TEST_DB_TYPE }}
+        TURBO_TOKEN: ${{ inputs.TURBO_TOKEN }}
+        NODEJS_VERSION: ${{ inputs.NODEJS_VERSION }}
+        CYPRESS_RECORD_KEY: ${{ inputs.CYPRESS_RECORD_KEY }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
+    - name: Run turbo task (in PR)
+      if: github.event_name != 'push'
+      run: yarn run ${{ inputs.TASK_NAME }} --no-cache
+      shell: bash
+      env:
+        HEDGEDOC_TEST_DB_TYPE: ${{ inputs.HEDGEDOC_TEST_DB_TYPE }}
+        TURBO_TOKEN: ${{ inputs.TURBO_TOKEN }}
+        NODEJS_VERSION: ${{ inputs.NODEJS_VERSION }}
+        CYPRESS_RECORD_KEY: ${{ inputs.CYPRESS_RECORD_KEY }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
