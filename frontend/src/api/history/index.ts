@@ -16,7 +16,7 @@ import type { ChangePinStatusDto, HistoryEntry, HistoryEntryPutDto } from './typ
  * @throws {Error} when the api request wasn't successful.
  */
 export const getRemoteHistory = async (): Promise<HistoryEntry[]> => {
-  const response = await new GetApiRequestBuilder<HistoryEntry[]>('me/history').sendRequest()
+  const response = await new GetApiRequestBuilder<HistoryEntry[]>('me/history', 'history.get').sendRequest()
   return response.asParsedJsonObject()
 }
 
@@ -27,7 +27,7 @@ export const getRemoteHistory = async (): Promise<HistoryEntry[]> => {
  * @throws {Error} when the api request wasn't successful.
  */
 export const setRemoteHistoryEntries = async (entries: HistoryEntryPutDto[]): Promise<void> => {
-  await new PostApiRequestBuilder<void, HistoryEntryPutDto[]>('me/history').withJsonBody(entries).sendRequest()
+  await new PostApiRequestBuilder<void, HistoryEntryPutDto[]>('me/history', 'history.set').withJsonBody(entries).sendRequest()
 }
 
 /**
@@ -41,7 +41,7 @@ export const updateRemoteHistoryEntryPinStatus = async (
   noteIdOrAlias: string,
   pinStatus: boolean
 ): Promise<HistoryEntry> => {
-  const response = await new PutApiRequestBuilder<HistoryEntry, ChangePinStatusDto>('me/history/' + noteIdOrAlias)
+  const response = await new PutApiRequestBuilder<HistoryEntry, ChangePinStatusDto>('me/history/' + noteIdOrAlias, 'history.pin')
     .withJsonBody({
       pinStatus
     })
@@ -56,7 +56,7 @@ export const updateRemoteHistoryEntryPinStatus = async (
  * @throws {Error} when the api request wasn't successful.
  */
 export const deleteRemoteHistoryEntry = async (noteIdOrAlias: string): Promise<void> => {
-  await new DeleteApiRequestBuilder('me/history/' + noteIdOrAlias).sendRequest()
+  await new DeleteApiRequestBuilder('me/history/' + noteIdOrAlias, 'history.deleteEntry').sendRequest()
 }
 
 /**
@@ -65,5 +65,5 @@ export const deleteRemoteHistoryEntry = async (noteIdOrAlias: string): Promise<v
  * @throws {Error} when the api request wasn't successful.
  */
 export const deleteRemoteHistory = async (): Promise<void> => {
-  await new DeleteApiRequestBuilder('me/history').sendRequest()
+  await new DeleteApiRequestBuilder('me/history', 'history.delete').sendRequest()
 }
