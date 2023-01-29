@@ -7,13 +7,6 @@
     "frontend",
     "commons"
   ],
-  "scripts": {
-    "build": "turbo run build",
-    "lint": "turbo run lint",
-    "build:test": "turbo run build:test",
-    "test:ci": "turbo run test:ci",
-    "test:e2e:ci": "turbo run test:e2e:ci"
-  },
   "packageManager": "yarn@3.3.1",
   "resolutions": {
     "domhandler": "5.0.3",

@@ -61,7 +61,7 @@ FROM code-with-deps as builder
 USER node
 WORKDIR /usr/src/app
 
-RUN yarn build --scope backend
+RUN yarn turbo run build --filter=backend
 
 ## Stage 3a: Install only prod dependencies
 FROM code-with-deps as prod-dependencies

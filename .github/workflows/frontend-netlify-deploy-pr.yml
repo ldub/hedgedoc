@@ -93,8 +93,8 @@ jobs:
         run: echo "HD_EDITOR_BASE_URL=\"${{ env.DEPLOY_URL }}\"" >> .env.production
 
       - name: Build app
-        run: yarn build:mock
-        working-directory: ..
+        run: yarn turbo run build:mock
+        working-directory: .
 
       - name: Remove Next.js cache to avoid it being deployed
         run: rm -r .next/cache

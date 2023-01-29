@@ -30,7 +30,7 @@ runs:
   steps:
     - name: Run turbo task (on develop)
       if: github.event_name == 'push'
-      run: yarn run ${{ inputs.TASK_NAME }}
+      run: yarn turbo run ${{ inputs.TASK_NAME }}
       shell: bash
       env:
         HEDGEDOC_TEST_DB_TYPE: ${{ inputs.HEDGEDOC_TEST_DB_TYPE }}
@@ -41,7 +41,7 @@ runs:
 
     - name: Run turbo task (in PR)
       if: github.event_name != 'push'
-      run: yarn run ${{ inputs.TASK_NAME }} --no-cache
+      run: yarn turbo run ${{ inputs.TASK_NAME }} --no-cache
       shell: bash
       env:
         HEDGEDOC_TEST_DB_TYPE: ${{ inputs.HEDGEDOC_TEST_DB_TYPE }}

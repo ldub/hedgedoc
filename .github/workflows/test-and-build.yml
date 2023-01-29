@@ -38,7 +38,7 @@ jobs:
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
 
       - name: Build project
-        run: yarn build
+        run: yarn turbo run build
         env:
           NODEJS_VERSION: ${{ matrix.node }}
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
