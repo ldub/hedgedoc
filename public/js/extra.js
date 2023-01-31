@@ -117,9 +117,9 @@ function getTitle (view) {
 export function renderTitle (view) {
   let title = getTitle(view)
   if (title) {
-    title += ' - HedgeDoc'
+    title += ' - Lev\'s Notes'
   } else {
-    title = 'HedgeDoc - Collaborative markdown notes'
+    title = 'Lev\'s Notes'
   }
   return title
 }
